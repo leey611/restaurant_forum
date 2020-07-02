@@ -63,6 +63,14 @@ let adminController = {
           res.redirect('/admin/restaurants');
         });
     });
+  },
+  //Delete a restaurant
+  deleteRestaurant: (req, res) => {
+    return Restaurant.findByPk(req.params.id).then((restaurant) =>
+      restaurant
+        .destroy()
+        .then((restaurant) => res.redirect('/admin/restaurants'))
+    );
   }
 };
 
