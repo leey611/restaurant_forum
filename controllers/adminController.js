@@ -14,9 +14,9 @@ let adminController = {
     return res.render('admin/create');
   },
   postRestaurant: (req, res) => {
-    console.log('req body==>>>>>', req.body);
     const { name, tel, address, opening_hours, description } = req.body;
     const { file } = req;
+    console.log('file==>>>', req.file);
     if (!name) {
       req.flash('error_messages', 'Name is required');
       return res.redirect('back');

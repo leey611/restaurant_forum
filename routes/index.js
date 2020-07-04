@@ -41,7 +41,7 @@ module.exports = (app, passport) => {
   app.post(
     '/admin/restaurants',
     authenticatedAdmin,
-    //upload.single('image'),
+    upload.single('image'),
     adminController.postRestaurant
   );
   app.get(
