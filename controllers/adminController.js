@@ -14,6 +14,7 @@ let adminController = {
     return res.render('admin/create');
   },
   postRestaurant: (req, res) => {
+    console.log('req body==>>>>>', req.body);
     const { name, tel, address, opening_hours, description } = req.body;
     const { file } = req;
     if (!name) {
