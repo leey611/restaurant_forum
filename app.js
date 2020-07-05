@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/upload', express.static(__dirname + '/upload'));
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || 'secret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false
   })
