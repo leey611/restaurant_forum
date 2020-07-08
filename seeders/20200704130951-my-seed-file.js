@@ -55,6 +55,25 @@ module.exports = {
           }`,
           description: faker.lorem.text(),
           createdAt: new Date(),
+          updatedAt: new Date(),
+          CategoryId: Math.floor(Math.random() * 5) + 1
+        })),
+        {}
+      );
+      await queryInterface.bulkInsert(
+        'Categories',
+        [
+          'Chinese',
+          'Japanese',
+          'Italian',
+          'Mexican',
+          'Vegan',
+          'American',
+          'Fusion'
+        ].map((item, index) => ({
+          id: index + 1,
+          name: item,
+          createdAt: new Date(),
           updatedAt: new Date()
         })),
         {}
@@ -73,6 +92,7 @@ module.exports = {
      */
     try {
       await queryInterface.bulkDelete('Users', null, {});
+      await queryInterface.bulkDelete('Categories', null, {});
       await queryInterface.bulkDelete('Restaurants', null, {});
     } catch (err) {
       console.log(err);

@@ -11,7 +11,14 @@ const flash = require('connect-flash');
 const passport = require('./config/passport');
 const methodOverride = require('method-override');
 
-app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }));
+app.engine(
+  'hbs',
+  exphbs({
+    defaultLayout: 'main',
+    extname: '.hbs',
+    helpers: require('./config/handlebars-helper')
+  })
+);
 app.set('view engine', 'hbs');
 app.use(express.urlencoded({ extended: false }));
 app.use('/upload', express.static(__dirname + '/upload'));
