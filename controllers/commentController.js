@@ -13,6 +13,15 @@ let commentController = {
     } catch (err) {
       console.log(err);
     }
+  },
+  deleteComment: async (req, res) => {
+    try {
+      const toDelete = await Comment.findByPk(req.params.id);
+      toDelete.destroy();
+      res.redirect(`/restaurants/${toDelete.RestaurantId}`);
+    } catch (err) {
+      console.log(err);
+    }
   }
 };
 module.exports = commentController;
