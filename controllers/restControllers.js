@@ -57,7 +57,8 @@ let restController = {
   getRestaurant: (req, res) => {
     Restaurant.findByPk(req.params.id, {
       raw: true,
-      nest: true
+      nest: true,
+      include: [Category]
     })
       .then((restaurant) => res.render('restaurant', { restaurant }))
       .catch((err) => console.log(err));
