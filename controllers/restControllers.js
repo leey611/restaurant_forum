@@ -1,6 +1,8 @@
 const db = require('../models');
 const Restaurant = db.Restaurant;
 const Category = db.Category;
+const User = db.User;
+const Comment = db.Comment;
 
 const pageLimit = 10; // How many items shown per page
 
@@ -56,11 +58,13 @@ let restController = {
   },
   getRestaurant: (req, res) => {
     Restaurant.findByPk(req.params.id, {
-      raw: true,
-      nest: true,
-      include: [Category]
+      // raw: true,
+      // nest: true,
+      include: [Category, { model: Comment, include: [User] }]
     })
-      .then((restaurant) => res.render('restaurant', { restaurant }))
+      .then((restaurant) => {
+        res.render('restaurant', { restaurant: restaurant.toJSON() });
+      })
       .catch((err) => console.log(err));
   }
 };
