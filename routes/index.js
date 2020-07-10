@@ -5,6 +5,7 @@ const categoryController = require('../controllers/categoryController');
 const commentController = require('../controllers/commentController');
 
 const multer = require('multer');
+const { authenticate } = require('passport');
 const upload = multer({ dest: 'temp/' });
 
 module.exports = (app, passport) => {
@@ -22,6 +23,12 @@ module.exports = (app, passport) => {
       return res.redirect('/');
     }
     res.redirect('/signin');
+  };
+  const authenticateCurrentUser = (req, res, next) => {
+    if (req.user.id === Number(req.params.id)) {
+      return next();
+    }
+    return res.redirect('/');
   };
 
   app.get('/', authenticated, (req, res) => res.redirect('restaurants'));
@@ -105,6 +112,7 @@ module.exports = (app, passport) => {
     categoryController.deleteCategory
   );
 
+  //User controller
   app.get('/signup', userController.signUpPage);
   app.post('/signup', userController.signUp);
 
@@ -118,4 +126,18 @@ module.exports = (app, passport) => {
     userController.signIn
   );
   app.get('/logout', userController.logout);
+
+  app.get('/users/:id', authenticated, userController.getUser);
+  app.get(
+    '/users/:id/edit',
+    authenticated,
+    authenticateCurrentUser,
+    userController.editUser
+  );
+  app.put(
+    '/users/:id',
+    authenticated,
+    upload.single('image'),
+    userController.putUser
+  );
 };
