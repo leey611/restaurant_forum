@@ -89,6 +89,24 @@ let restController = {
         });
       });
     });
+  },
+  getDashboard: async (req, res) => {
+    try {
+      //return Restaurant.findByPk(req.params.id, {include: [Category]})
+      const restaurant = await Restaurant.findByPk(req.params.id, {
+        include: [Category]
+      });
+      const result = await Comment.findAndCountAll({
+        where: { RestaurantId: restaurant.id }
+      });
+      res.render('dashboard', {
+        restaurant: restaurant.toJSON(),
+        comments: result.count
+      });
+    } catch (err) {
+      console.log(err);
+      res.send(err);
+    }
   }
 };
 module.exports = restController;
