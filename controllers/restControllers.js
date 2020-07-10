@@ -34,7 +34,7 @@ let restController = {
       );
       let prev = page - 1 < 1 ? 1 : page - 1;
       let next = page + 1 > pages ? pages : page + 1;
-      const test = result.rows.map((r) => console.log(r.Category.name));
+      //const test = result.rows.map((r) => console.log(r.Category.name));
 
       const data = result.rows.map((r) => ({
         ...r.dataValues,
