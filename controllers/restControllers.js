@@ -64,6 +64,7 @@ let restController = {
       include: [Category, { model: Comment, include: [User] }]
     })
       .then((restaurant) => {
+        restaurant.increment('viewCounts');
         res.render('restaurant', { restaurant: restaurant.toJSON() });
       })
       .catch((err) => console.log(err));
@@ -101,7 +102,8 @@ let restController = {
       });
       res.render('dashboard', {
         restaurant: restaurant.toJSON(),
-        comments: result.count
+        comments: result.count,
+        viewCounts: restaurant.viewCounts
       });
     } catch (err) {
       console.log(err);
