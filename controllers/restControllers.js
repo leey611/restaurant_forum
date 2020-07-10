@@ -34,11 +34,12 @@ let restController = {
       );
       let prev = page - 1 < 1 ? 1 : page - 1;
       let next = page + 1 > pages ? pages : page + 1;
+      //const test = result.rows.map((r) => console.log(r.Category));
 
       const data = result.rows.map((r) => ({
         ...r.dataValues,
         description: r.dataValues.description.substring(0, 50),
-        categoryName: r.Category.name
+        categoryName: r.Category.dataValues.name
       }));
       Category.findAll({ raw: true, nest: true }).then((categories) =>
         res.render('restaurants', {
