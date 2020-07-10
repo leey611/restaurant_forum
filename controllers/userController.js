@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs');
 const db = require('../models');
 const User = db.User;
+const Restaurant = db.Restaurant;
+const Comment = db.Comment;
 const fs = require('fs');
 const imgur = require('imgur-node-api');
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID;
@@ -28,7 +30,10 @@ let userController = {
               req.body.password,
               bcrypt.genSaltSync(10),
               null
-            )
+            ),
+            image: `https://loremflickr.com/320/240/restaurant,food/?random=${
+              Math.random() * 100
+            }`
           }).then((user) => {
             req.flash('success_messages', 'Register successfully');
             return res.redirect('/signin');
@@ -56,8 +61,11 @@ let userController = {
     //console.log(req.user);
     try {
       //check if it's current user. If yes, set isCurrentUser true, if not, they can still see the targetUser's profile
-      const currentUser = await User.findByPk(req.user.id);
+      const currentUser = await User.findByPk(req.user.id, {
+        include: { model: Comment, include: [Restaurant] }
+      });
       if (req.user.id === Number(req.params.id)) {
+        //console.log(currentUser.toJSON());
         res.render('user', { user: currentUser.toJSON(), isCurrentUser: true });
       } else {
         const targetUser = await User.findByPk(req.params.id);
