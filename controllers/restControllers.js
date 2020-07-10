@@ -38,8 +38,8 @@ let restController = {
 
       const data = result.rows.map((r) => ({
         ...r.dataValues,
-        description: r.dataValues.description.substring(0, 50),
-        categoryName: r.Category.name
+        description: r.dataValues.description.substring(0, 50)
+        //categoryName: r.Category.name
       }));
       Category.findAll({ raw: true, nest: true }).then((categories) =>
         res.render('restaurants', {
