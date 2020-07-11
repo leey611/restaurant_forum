@@ -14,6 +14,12 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = function (models) {
     // associations can be defined here
     User.hasMany(models.Comment);
+    // a user can have many restaurants
+    User.belongsToMany(models.Restaurant, {
+      through: models.Favorite, //through a favorite table (which shows the Many to Many relationship)
+      foreignKey: 'UserId', //to see what rest a user has liked, stick UserId
+      as: 'FavoritedRestaurants' //the result is what rest the user has
+    });
   };
   return User;
 };

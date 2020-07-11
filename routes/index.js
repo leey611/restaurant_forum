@@ -41,6 +41,17 @@ module.exports = (app, passport) => {
   app.get('/restaurants', authenticated, restController.getRestaurants);
   app.get('/restaurants/:id', authenticated, restController.getRestaurant);
 
+  //Favorite
+  app.post(
+    '/favorite/:restaurantId',
+    authenticated,
+    userController.addFavorite
+  );
+  app.delete(
+    '/favorite/:restaurantId',
+    authenticated,
+    userController.removeFavorite
+  );
   //Comment
   app.post('/comments', authenticated, commentController.postComment);
   app.delete(
