@@ -1,4 +1,7 @@
 'use strict';
+
+//const { Model } = require('sequelize/types');
+
 module.exports = (sequelize, DataTypes) => {
   const Restaurant = sequelize.define(
     'Restaurant',
@@ -22,6 +25,11 @@ module.exports = (sequelize, DataTypes) => {
       through: models.Favorite, //through a table called favorite
       foreignKey: 'RestaurantId', //to see how the rest is liked by users, stick the restId
       as: 'FavoritedUsers' //and the result is users who have like this rest
+    });
+    Restaurant.belongsToMany(models.User, {
+      through: models.Like,
+      foreignKey: 'RestaurantId',
+      as: 'LikedUsers'
     });
   };
   return Restaurant;

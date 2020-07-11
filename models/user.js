@@ -20,6 +20,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'UserId', //to see what rest a user has liked, stick UserId
       as: 'FavoritedRestaurants' //the result is what rest the user has
     });
+    User.belongsToMany(models.Restaurant, {
+      through: models.Like,
+      foreignKey: 'UserId',
+      as: 'LikedRestaurants'
+    });
   };
   return User;
 };

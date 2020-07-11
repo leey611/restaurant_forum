@@ -52,6 +52,9 @@ module.exports = (app, passport) => {
     authenticated,
     userController.removeFavorite
   );
+  //Like
+  app.post('/like/:restaurantId', authenticated, userController.addLike);
+  app.delete('/like/:restaurantId', authenticated, userController.removeLike);
   //Comment
   app.post('/comments', authenticated, commentController.postComment);
   app.delete(

@@ -4,6 +4,7 @@ const User = db.User;
 const Restaurant = db.Restaurant;
 const Comment = db.Comment;
 const Favorite = db.Favorite;
+const Like = db.Like;
 const fs = require('fs');
 const imgur = require('imgur-node-api');
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID;
@@ -186,6 +187,33 @@ let userController = {
     //     return res.redirect('back');
     //   });
     // });
+  },
+  addLike: async (req, res) => {
+    try {
+      const newLike = await Like.create({
+        UserId: req.user.id,
+        RestaurantId: req.params.restaurantId
+      });
+      res.redirect('back');
+    } catch (err) {
+      console.log(err);
+      res.send(err);
+    }
+  },
+  removeLike: async (req, res) => {
+    try {
+      const toRemove = await Like.findOne({
+        where: {
+          UserId: req.user.id,
+          RestaurantId: req.params.restaurantId
+        }
+      });
+      toRemove.destroy();
+      res.redirect('back');
+    } catch (err) {
+      console.log(err);
+      res.send(err);
+    }
   }
 };
 
