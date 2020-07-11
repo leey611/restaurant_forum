@@ -88,6 +88,23 @@ let restController = {
       })
       .catch((err) => console.log(err));
   },
+  getTopRestaurant: (req, res) => {
+    return Restaurant.findAll({
+      include: [{ model: User, as: 'FavoritedUsers' }]
+    }).then((restaurants) => {
+      restaurants = restaurants.map((r) => ({
+        ...r.dataValues,
+        FavoriteCount: r.FavoritedUsers.length,
+        isFavorited: req.user.FavoritedRestaurants.map((d) => d.id).includes(
+          r.id
+        )
+      }));
+      restaurants = restaurants
+        .sort((a, b) => b.FavoriteCount - a.FavoriteCount)
+        .slice(0, 10);
+      return res.render('topRestaurant', { restaurants });
+    });
+  },
   getFeeds: (req, res) => {
     return Restaurant.findAll({
       limit: 10,
