@@ -114,14 +114,15 @@ let restController = {
     try {
       //return Restaurant.findByPk(req.params.id, {include: [Category]})
       const restaurant = await Restaurant.findByPk(req.params.id, {
-        include: [Category]
+        include: [Category, Comment]
       });
-      const result = await Comment.findAndCountAll({
-        where: { RestaurantId: restaurant.id }
-      });
+      // const result = await Comment.findAndCountAll({
+      //   where: { RestaurantId: restaurant.id }
+      // });
+      restaurant = restaurant.toJSON();
       res.render('dashboard', {
-        restaurant: restaurant.toJSON(),
-        comments: result.count,
+        restaurant: restaurant,
+        comments: restaurant.Comments.length,
         viewCounts: restaurant.viewCounts
       });
     } catch (err) {

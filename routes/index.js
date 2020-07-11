@@ -55,6 +55,13 @@ module.exports = (app, passport) => {
   //Like
   app.post('/like/:restaurantId', authenticated, userController.addLike);
   app.delete('/like/:restaurantId', authenticated, userController.removeLike);
+  //Followship
+  app.post('/following/:userId', authenticated, userController.addFollowing);
+  app.delete(
+    '/following/:userId',
+    authenticated,
+    userController.removeFollowing
+  );
   //Comment
   app.post('/comments', authenticated, commentController.postComment);
   app.delete(
@@ -147,6 +154,7 @@ module.exports = (app, passport) => {
   );
   app.get('/logout', userController.logout);
 
+  app.get('/users/top', authenticated, userController.getTopUser);
   app.get('/users/:id', authenticated, userController.getUser);
   app.get(
     '/users/:id/edit',

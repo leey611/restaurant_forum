@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     Restaurant.belongsTo(models.Category);
     Restaurant.hasMany(models.Comment);
     Restaurant.belongsToMany(models.User, {
-      //a restaurant can belongs to/be liked by many user
+      //a restaurant can belong to/be liked by many user
       through: models.Favorite, //through a table called favorite
       foreignKey: 'RestaurantId', //to see how the rest is liked by users, stick the restId
       as: 'FavoritedUsers' //and the result is users who have like this rest

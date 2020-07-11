@@ -1,0 +1,37 @@
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link" href="/restaurants">Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/restaurants/feeds">Latest Feed</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/restaurants/top">TOP10 Restaurants</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href="/users/top">Influencers</a>
+  </li>
+</ul>
+<br /><br />
+<h1>Influencers</h1>
+<hr />
+<div class="row" style="text-align: center;">
+  {{#each users}}
+  <div class="col-3">
+    <a href="/users/{{this.id}}">
+      <img class="" src="{{this.image}}" width="140px" height="140px">
+    </a>
+    <h2>{{this.name}}</h2>
+    <span class="badge badge-secondary">Follwers: {{this.FollowerCount}}</span>
+    <p>
+      {{#if this.isFollowed }}
+    <form action="/following/{{this.id}}?_method=DELETE" method="POST" style="display: contents;"><button type="submit"
+        class="btn btn-danger">Unfollow</button></form>
+    {{else}}
+    <form action="/following/{{this.id}}" method="POST" style="display: contents;"><button type="submit"
+        class="btn btn-primary">Follow</button></form>
+    {{/if}}
+    </p>
+  </div>
+  {{/each}}
+</div>
