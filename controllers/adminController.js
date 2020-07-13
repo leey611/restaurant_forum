@@ -7,6 +7,8 @@ const imgur = require('imgur-node-api');
 const category = require('../models/category');
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID;
 
+const adminService = require('../services/adminService');
+
 let adminController = {
   getUsers: (req, res) => {
     return User.findAll({ raw: true }).then((users) => {
@@ -26,13 +28,16 @@ let adminController = {
       });
   },
   getRestaurants: (req, res) => {
-    return Restaurant.findAll({
-      raw: true,
-      nest: true,
-      include: [Category]
-    }).then((restaurants) => {
-      return res.render('admin/restaurants', { restaurants: restaurants });
+    adminService.getRestaurants(req, res, (data) => {
+      return res.render('admin/restaurants', data);
     });
+    // return Restaurant.findAll({
+    //   raw: true,
+    //   nest: true,
+    //   include: [Category]
+    // }).then((restaurants) => {
+    //   return res.render('admin/restaurants', { restaurants: restaurants });
+    // });
   },
   createRestaurant: (req, res) => {
     Category.findAll({ raw: true, nest: true }).then((categories) =>
@@ -105,13 +110,16 @@ let adminController = {
   },
   //get a single restaurant
   getRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id, {
-      raw: true,
-      nest: true,
-      include: [Category]
-    }).then((restaurant) => {
-      return res.render('admin/restaurant', { restaurant });
+    adminService.getRestaurant(req, res, (data) => {
+      return res.render('admin/restaurant', data);
     });
+    // return Restaurant.findByPk(req.params.id, {
+    //   raw: true,
+    //   nest: true,
+    //   include: [Category]
+    // }).then((restaurant) => {
+    //   return res.render('admin/restaurant', { restaurant });
+    // });
   },
   //render edit page
   editRestaurant: (req, res) => {
