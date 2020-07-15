@@ -23,17 +23,25 @@ let categoryController = {
     // });
   },
   postCategory: (req, res) => {
-    const { name } = req.body;
-    if (!name) {
-      req.flash('error_messages', 'Name is required');
-      return res.redirect('back');
-    }
-    Category.create({ name })
-      .then(() => {
-        req.flash('success_messages', 'Created successfully');
-        return res.redirect('/admin/categories');
-      })
-      .catch((err) => console.log(err));
+    categoryService.postCategory(req, res, (data) => {
+      if(data['status']==='error') {
+        req.flash('error_messages', data['message'])
+        return res.redirect('back')
+      }
+      req.flash('success_messages', data['message'])
+      res.redirect('admin/categories')
+    });
+    // const { name } = req.body;
+    // if (!name) {
+    //   req.flash('error_messages', 'Name is required');
+    //   return res.redirect('back');
+    // }
+    // Category.create({ name })
+    //   .then(() => {
+    //     req.flash('success_messages', 'Created successfully');
+    //     return res.redirect('/admin/categories');
+    //   })
+    //   .catch((err) => console.log(err));
   },
   putCategory: (req, res) => {
     if (!req.body.name) {
