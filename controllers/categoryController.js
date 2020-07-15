@@ -24,12 +24,12 @@ let categoryController = {
   },
   postCategory: (req, res) => {
     categoryService.postCategory(req, res, (data) => {
-      if(data['status']==='error') {
-        req.flash('error_messages', data['message'])
-        return res.redirect('back')
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message']);
+        return res.redirect('back');
       }
-      req.flash('success_messages', data['message'])
-      res.redirect('admin/categories')
+      req.flash('success_messages', data['message']);
+      res.redirect('admin/categories');
     });
     // const { name } = req.body;
     // if (!name) {
@@ -60,13 +60,18 @@ let categoryController = {
     }
   },
   deleteCategory: (req, res) => {
-    Category.findByPk(req.params.id)
-      .then((category) => category.destroy())
-      .then(() => {
-        req.flash('success_messages', 'Delete successfully');
-        return res.redirect('/admin/categories');
-      })
-      .catch((err) => console.log(err));
+    categoryService.deleteCategory(req, res, (data) => {
+      if (data['status'] === 'success') {
+        return res.redirect('admin/categories');
+      }
+    });
+    // Category.findByPk(req.params.id)
+    //   .then((category) => category.destroy())
+    //   .then(() => {
+    //     req.flash('success_messages', 'Delete successfully');
+    //     return res.redirect('/admin/categories');
+    //   })
+    //   .catch((err) => console.log(err));
   }
 };
 

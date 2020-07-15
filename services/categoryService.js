@@ -35,6 +35,16 @@ let categoryService = {
         //return res.redirect('/admin/categories');
       })
       .catch((err) => console.log(err));
+  },
+  deleteCategory: (req, res, callback) => {
+    Category.findByPk(req.params.id)
+      .then((category) => category.destroy())
+      .then(() => {
+        callback({status: 'success', message: 'Delete successfully'})
+        //req.flash('success_messages', 'Delete successfully');
+        //return res.redirect('/admin/categories');
+      })
+      .catch((err) => console.log(err));
   }
 };
 
