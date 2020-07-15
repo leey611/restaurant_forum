@@ -36,11 +36,29 @@ let categoryService = {
       })
       .catch((err) => console.log(err));
   },
+  putCategory: (req, res, callback) => {
+    if (!req.body.name) {
+      callback({ status: 'error', message: 'Name is required' });
+      //req.flash('error_messages', 'Name is required');
+      //return res.redirect('back');
+    } else {
+      Category.findByPk(req.params.id).then((category) => {
+        category
+          .update({ name: req.body.name })
+          .then(() => {
+            callback({ status: 'success', message: 'Updated successfully' });
+            //req.flash('success_messages', 'Updated successfully');
+            //return res.redirect('/admin/categories');
+          })
+          .catch((err) => console.log(err));
+      });
+    }
+  },
   deleteCategory: (req, res, callback) => {
     Category.findByPk(req.params.id)
       .then((category) => category.destroy())
       .then(() => {
-        callback({status: 'success', message: 'Delete successfully'})
+        callback({ status: 'success', message: 'Delete successfully' });
         //req.flash('success_messages', 'Delete successfully');
         //return res.redirect('/admin/categories');
       })
