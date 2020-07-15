@@ -7,6 +7,7 @@ const upload = multer({ dest: 'temp/' });
 const adminController = require('../controllers/api/adminController');
 const categoryController = require('../controllers/api/categoryController');
 const categoryService = require('../services/categoryService');
+const userController = require('../controllers/api/userController.js');
 
 router.get('/admin/restaurants', adminController.getRestaurants);
 router.get('/admin/restaurants/:id', adminController.getRestaurant);
@@ -22,5 +23,8 @@ router.get('/admin/categories', categoryController.getCategories);
 router.post('/admin/categories', categoryService.postCategory);
 router.put('/admin/categories/:id', categoryService.putCategory);
 router.delete('/admin/categories/:id', categoryService.deleteCategory);
+
+// JWT signin
+router.post('/signin', userController.signIn);
 
 module.exports = router;
