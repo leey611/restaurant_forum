@@ -83,5 +83,6 @@ router.delete(
 
 // JWT signin
 router.post('/signin', userController.signIn);
+router.post('/signup', userController.signUp);
 
 module.exports = router;
