@@ -45,68 +45,25 @@ let adminController = {
     );
   },
   postRestaurant: (req, res) => {
-    const {
-      name,
-      tel,
-      address,
-      opening_hours,
-      description,
-      categoryId
-    } = req.body;
-    const { file } = req;
-    console.log('file==>>>', req.file);
-    if (!name) {
-      req.flash('error_messages', 'Name is required');
-      return res.redirect('back');
-    }
-    if (file) {
-      imgur.setClientID(IMGUR_CLIENT_ID);
-      imgur.upload(file.path, (err, img) => {
-        return Restaurant.create({
-          name,
-          tel,
-          address,
-          opening_hours,
-          description,
-          image: file ? img.data.link : null,
-          CategoryId: categoryId
-        }).then((restaurant) => {
-          req.flash('success_messages', 'restaurant created successfully');
-          return res.redirect('/admin/restaurants');
-        });
-      });
-      // fs.readFile(file.path, (err, data) => {
-      //   imgur.setClientID(IMGUR_CLIENT_ID);
-      //   imgur.upload(file.path, (err, img) => {
-      //     console.log(img.data.link);
-      //     //if (err) console.log('Error: ', err);
-      //     //fs.writeFile(`upload/${file.originalname}`, data, () => {
-      //     return Restaurant.create({
-      //       name,
-      //       tel,
-      //       address,
-      //       opening_hours,
-      //       description,
-      //       image: file ? img.data.link : null
-      //     }).then((restaurant) => {
-      //       req.flash('success_messages', 'restaurant was created');
-      //       return res.redirect('/admin/restaurants');
-      //     });
-      //   });
-      // });
-    } else {
-      return Restaurant.create({
-        name,
-        tel,
-        address,
-        opening_hours,
-        description,
-        image: null
-      }).then((restaurant) => {
-        req.flash('success_messages', 'restaurant created successfully');
-        res.redirect('/admin/restaurants');
-      });
-    }
+    adminService.postRestaurant(req, res, (data) => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message']);
+        return res.redirect('back');
+      }
+      req.flash('success_messages', data['message']);
+      res.redirect('/admin/restaurants');
+    });
+  },
+  //PUT update a restaurant
+  putRestaurant: (req, res) => {
+    adminService.putRestaurant(req, res, (data) => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message']);
+        return res.redirect('back');
+      }
+      req.flash('success_messages', data['message']);
+      res.redirect('/admin/restaurants');
+    });
   },
   //get a single restaurant
   getRestaurant: (req, res) => {
@@ -133,67 +90,13 @@ let adminController = {
       }
     );
   },
-  //PUT update a restaurant
-  putRestaurant: (req, res) => {
-    const {
-      name,
-      tel,
-      address,
-      opening_hours,
-      description,
-      categoryId
-    } = req.body;
-    const { file } = req;
-    if (!name) {
-      req.flash('error_messages', 'Name is required');
-      return res.redirect('back');
-    }
-    if (file) {
-      imgur.setClientID(IMGUR_CLIENT_ID);
-      imgur.upload(file.path, (err, img) => {
-        return Restaurant.findByPk(req.params.id).then((restaurant) => {
-          restaurant
-            .update({
-              name,
-              tel,
-              address,
-              opening_hours,
-              description,
-              image: file ? img.data.link : restaurant.image,
-              CategoryId: categoryId
-            })
-            .then((restaurant) => {
-              req.flash('success_messages', 'restaurant updated successfully');
-              res.redirect('/admin/restaurants');
-            });
-        });
-      });
-    } else {
-      return Restaurant.findByPk(req.params.id).then((restaurant) => {
-        restaurant
-          .update({
-            name,
-            tel,
-            address,
-            opening_hours,
-            description,
-            image: restaurant.image,
-            CategoryId: categoryId
-          })
-          .then((restaurant) => {
-            req.flash('success_messages', 'restaurant updated successfully');
-            res.redirect('/admin/restaurants');
-          });
-      });
-    }
-  },
   //Delete a restaurant
   deleteRestaurant: (req, res) => {
     adminService.deleteRestaurant(req, res, (data) => {
       if (data['status'] === 'success') {
-        return res.redirect('/admin/restaurants')
+        return res.redirect('/admin/restaurants');
       }
-    })
+    });
   }
 };
 
