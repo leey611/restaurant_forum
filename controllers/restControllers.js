@@ -3,6 +3,7 @@ const Restaurant = db.Restaurant;
 const Category = db.Category;
 const User = db.User;
 const Comment = db.Comment;
+const Favorite = db.Favorite;
 
 const pageLimit = 10; // How many items shown per page
 
@@ -129,17 +130,17 @@ let restController = {
   },
   getDashboard: async (req, res) => {
     try {
-      //return Restaurant.findByPk(req.params.id, {include: [Category]})
       const restaurant = await Restaurant.findByPk(req.params.id, {
         include: [Category, Comment]
       });
-      // const result = await Comment.findAndCountAll({
-      //   where: { RestaurantId: restaurant.id }
-      // });
-      restaurant = restaurant.toJSON();
+      const bookmarks = await Favorite.findAndCountAll({
+        where: { RestaurantId: await restaurant.id }
+      });
+
       res.render('dashboard', {
-        restaurant: restaurant,
+        restaurant: restaurant.toJSON(),
         comments: restaurant.Comments.length,
+        bookmarks: bookmarks.count,
         viewCounts: restaurant.viewCounts
       });
     } catch (err) {

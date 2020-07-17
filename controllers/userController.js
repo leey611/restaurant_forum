@@ -65,17 +65,44 @@ let userController = {
     try {
       //check if it's current user. If yes, set isCurrentUser true, if not, they can still see the targetUser's profile
       const currentUser = await User.findByPk(req.user.id, {
-        include: { model: Comment, include: [Restaurant] }
+        include: [
+          { model: Comment, include: [Restaurant] },
+          { model: Restaurant, as: 'FavoritedRestaurants' },
+          { model: User, as: 'Followings' },
+          { model: User, as: 'Followers' }
+        ]
       });
       if (req.user.id === Number(req.params.id)) {
         //console.log(currentUser.toJSON());
-        res.render('user', { user: currentUser.toJSON(), isCurrentUser: true });
+        res.render('user', {
+          user: currentUser.toJSON(),
+          isCurrentUser: true,
+          followers: req.user.Followers,
+          followings: req.user.Followings,
+          favorited: req.user.FavoritedRestaurants
+        });
       } else {
-        const targetUser = await User.findByPk(req.params.id);
+        const targetUser = await User.findByPk(req.params.id, {
+          include: [
+            { model: Comment, include: [Restaurant] },
+            { model: Restaurant, as: 'FavoritedRestaurants' },
+            { model: User, as: 'Followings' },
+            { model: User, as: 'Followers' }
+          ]
+        });
+        let isFollowing = req.user.Followings.map((d) => d.id).includes(
+          Number(req.params.id)
+        );
+        //console.log(targetUser.toJSON());
+
         res.render('user', {
           user: currentUser.toJSON(),
           targetUser: targetUser.toJSON(),
-          isCurrentUser: false
+          isCurrentUser: false,
+          followers: targetUser.toJSON().Followers,
+          followings: targetUser.toJSON().Followings,
+          favorited: targetUser.toJSON().FavoritedRestaurants,
+          isFollowing
         });
       }
     } catch (err) {
@@ -171,7 +198,7 @@ let userController = {
           RestaurantId: req.params.restaurantId
         }
       });
-      toRemove.destroy();
+      await toRemove.destroy();
       res.redirect('back');
     } catch (err) {
       console.log(err);
@@ -209,7 +236,7 @@ let userController = {
           RestaurantId: req.params.restaurantId
         }
       });
-      toRemove.destroy();
+      await toRemove.destroy();
       res.redirect('back');
     } catch (err) {
       console.log(err);
@@ -217,27 +244,26 @@ let userController = {
     }
   },
   addFollowing: (req, res) => {
- return Followship.create({
-   followerId: req.user.id,
-   followingId: req.params.userId
- })
-  .then((followship) => {
-    return res.redirect('back')
-  })
-},
+    return Followship.create({
+      followerId: req.user.id,
+      followingId: req.params.userId
+    }).then((followship) => {
+      return res.redirect('back');
+    });
+  },
 
-removeFollowing: (req, res) => {
- return Followship.findOne({where: {
-   followerId: req.user.id,
-   followingId: req.params.userId
- }})
-   .then((followship) => {
-     followship.destroy()
-      .then((followship) => {
-        return res.redirect('back')
-      })
-   })
-},
+  removeFollowing: (req, res) => {
+    return Followship.findOne({
+      where: {
+        followerId: req.user.id,
+        followingId: req.params.userId
+      }
+    }).then((followship) => {
+      followship.destroy().then((followship) => {
+        return res.redirect('back');
+      });
+    });
+  },
   getTopUser: (req, res) => {
     // 撈出所有 User 與 followers 資料
     return User.findAll({

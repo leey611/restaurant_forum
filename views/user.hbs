@@ -8,23 +8,80 @@
       <div class="card-body">
         <h3 class="card-title">{{user.name}}</h3>
         <h5 class="card-text">{{user.email}}</h5>
-        {{!-- {{#if isCurrentUser}} --}}
-        <a href="/users/{{user.id}}/edit" class="btn btn-primary mt-5">edit</a>
-        {{!-- {{/if}} --}}
+        <p>{{user.Comments.length}} Comments
+          <br>
+          {{favorited.length}} Bookmarks
+          <br>
+          {{followings.length}} Followings
+          <br>
+          {{followers.length}} Followers
+        </p>
+        <div class="row ml-1 mt-5">
+
+          <a href="/users/{{user.id}}/edit" class="btn btn-primary col-1">edit</a>
+
+        </div>
       </div>
     </div>
+  </div>
+</div>
 
-    <div class="col-md-8">
-      <div class="card-body">
-        <div>You have {{user.Comments.length}} Comment(s)</div>
-        {{#each user.Comments}}
-
-        <a href="/restaurants/{{this.Restaurant.id}}">
-          <img src="{{this.Restaurant.image}}" alt="restaurant img" width="50px" height="50px">
+<div class="row mb-3">
+  <!--- Followings --->
+  <div class="card col-4">
+    <div class="card-header">{{followings.length}} followings</div>
+    <div class="card-body">
+      <div class="card-text">
+        {{#each followings}}
+        <a href="/users/{{this.id}}" style="text-decoration: none;">
+          <img src="{{this.image}}" alt="{{this.name}}" style="width: 70px;">
         </a>
-
         {{/each}}
+      </div>
+    </div>
+  </div>
 
+  <!--- Comments --->
+  <div class="card col-8">
+    <div class="card-header">
+      {{user.Comments.length}} Comments
+    </div>
+    <div class="card-body">
+      <div class="card-text">
+        {{#each user.Comments}}
+        <a href="/restaurants/{{this.Restaurant.id}}" style="text-decoration: none;">
+          <img src="{{this.Restaurant.image}}" alt="picture" style="width: 110px;">
+        </a>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-2">
+  <!--- Followers --->
+  <div class="card col-4">
+    <div class="card-header">{{followers.length}} followers</div>
+    <div class="card-body">
+      <div class="card-text">
+        {{#each followers}}
+        <a href="/users/{{this.id}}" style="text-decoration: none;">
+          <img src="{{this.image}}" alt="{{this.name}}" style="width: 70px;">
+        </a>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+  <!--- Favorite --->
+  <div class="card col-8">
+    <div class="card-header">{{favorited.length}} Favorites</div>
+    <div class="card-body">
+      <div class="card-text">
+        {{#each favorited}}
+        <a href="/restaurants/{{this.id}}" style="text-decoration: none;">
+          <img src="{{this.image}}" alt="{{this.name}}" style="width: 110px;">
+        </a>
+        {{/each}}
       </div>
     </div>
   </div>
@@ -39,16 +96,91 @@
       <div class="card-body">
         <h3 class="card-title">{{targetUser.name}}</h3>
         <h5 class="card-text">{{targetUser.email}}</h5>
+        <p>{{targetUser.Comments.length}} Comments
+          <br>
+          {{favorited.length}} Bookmarks
+          <br>
+          {{followings.length}} Followings
+          <br>
+          {{followers.length}} Followers
+        </p>
+        <div class="row ml-1 mt-5">
 
+          {{#if isFollowing}}
+          <form action="/following/{{targetUser.id}}?_method=DELETE" method="post" class="col-1">
+            <button type="submit" class="btn btn-danger">取消追蹤</button>
+          </form>
+          {{else}}
+          <form action="/following/{{targetUser.id}}" method="post" class="col-1">
+            <button type="submit" class="btn btn-primary">追蹤</button>
+          </form>
+          {{/if}}
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mb-3">
+  <!--- Followings --->
+  <div class="card col-4">
+    <div class="card-header">{{followings.length}} followings</div>
+    <div class="card-body">
+      <div class="card-text">
+        {{#each followings}}
+        <a href="/users/{{this.id}}" style="text-decoration: none;">
+          <img src="{{this.image}}" alt="{{this.name}}" style="width: 70px;">
+        </a>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+
+  <!--- Comments --->
+  <div class="card col-8">
+    <div class="card-header">
+      {{user.Comments.length}} Comments
+    </div>
+    <div class="card-body">
+      <div class="card-text">
+        {{#each user.Comments}}
+        <a href="/restaurants/{{this.Restaurant.id}}" style="text-decoration: none;">
+          <img src="{{this.Restaurant.image}}" alt="picture" style="width: 110px;">
+        </a>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-2">
+  <!--- Followers --->
+  <div class="card col-4">
+    <div class="card-header">{{followers.length}} followers</div>
+    <div class="card-body">
+      <div class="card-text">
+        {{#each followers}}
+        <a href="/users/{{this.id}}" style="text-decoration: none;">
+          <img src="{{this.image}}" alt="{{this.name}}" style="width: 70px;">
+        </a>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+  <!--- Favorite --->
+  <div class="card col-8">
+    <div class="card-header">{{favorited.length}} Favorites</div>
+    <div class="card-body">
+      <div class="card-text">
+        {{#each favorited}}
+        <a href="/restaurants/{{this.id}}" style="text-decoration: none;">
+          <img src="{{this.image}}" alt="{{this.name}}" style="width: 110px;">
+        </a>
+        {{/each}}
       </div>
     </div>
   </div>
 </div>
 {{/if}}
-
-
-
-
-{{!-- {{#if targetUser}}
-
-{{/if}} --}}
